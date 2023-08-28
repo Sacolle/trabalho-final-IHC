@@ -9,7 +9,7 @@ import { ListItem, Button, Text, Input, Icon, ButtonGroup } from '@rneui/themed'
 
 import { RootStackParamsList, Table, Header, DataType } from '../types/types';
 
-type Props = NativeStackScreenProps<RootStackParamsList, 'MakeShable'>;
+type Props = NativeStackScreenProps<RootStackParamsList, 'Criar Tabela'>;
 
 //NOTE: se mudar os tipos suportados pelo datatype, mudar essa função
 function idx2Datatype(i: number): DataType{
@@ -80,16 +80,16 @@ export default function MakeShable({ route, navigation }: Props): JSX.Element {
 
 	return (
 		<SafeAreaView style={{flex: 1}}>
-			<View>
-				<Text> Criação de Tabela</Text>
+			<View style={{marginTop: 20}}>
 				<Input
 					placeholder='Nome da tabela'
 					rightIcon={{ type: 'feather', name: 'edit-3' }}
 					onChangeText={text => setTableName(text)} />
 			</View>
+			<Text h4 style={{padding: 10}}> Colunas da Tabela </Text>
 			<ScrollView  style={{flex: 1}}>
 				{columnEntries.map((col, i) => (
-					<ListItem key={i} bottomDivider>
+					<ListItem key={i} bottomDivider style={{paddingBottom: 10}}>
 						<View style={{flex: 1, flexDirection: 'column'}}>
 							<Input
 								placeholder='Nome da Coluna'

@@ -16,7 +16,7 @@ import { RootStackParamsList, Table as TableType, DataType } from '../types/type
 import ValuePrompt from '../components/ValuePrompt';
 import { FAB, Text, useTheme } from '@rneui/themed';
 
-type Props = NativeStackScreenProps<RootStackParamsList, 'Shable'>;
+type Props = NativeStackScreenProps<RootStackParamsList, 'Tabela'>;
 
 
 export default function Shable({ route, navigation }: Props): JSX.Element {
@@ -97,7 +97,7 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 	}
 
 	const changeTableOperation = () =>{
-		const newTable = structuredClone(tableData)
+		const newTable = JSON.parse(JSON.stringify(tableData))
 		if(newTable != undefined){
 			console.log("Selected")
 			newTable.table[selectedCollum][selectedRow] = selectedCellData
@@ -107,7 +107,7 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 		}
 	}
 	const addRow = () => {
-		const newTable = structuredClone(tableData)
+		const newTable: TableType = JSON.parse(JSON.stringify(tableData))
 		if(newTable != undefined){
 			const newRow = newTable.headers.map(({ datatype }) => datatype == 'number' ? '0' : '')
 			newTable.table.push(newRow)

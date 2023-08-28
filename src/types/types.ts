@@ -4,8 +4,8 @@ export type RootStackParamsList = {
 	Menu: { 
 		newId: string | undefined
 	};
-	MakeShable: string[];
-	Shable: { 
+	'Criar Tabela': string[];
+	Tabela: { 
 		shableId: string
 	};
 }

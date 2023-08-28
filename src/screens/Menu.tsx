@@ -45,7 +45,7 @@ export default function Menu({route, navigation}: Props): JSX.Element {
 			<ScrollView style={{margin: 10}}>
 				{shableIds.map((id, i) => {
 					return (
-						<ListItem key={i} bottomDivider style={{marginBottom: 5}} onPress={() => navigation.navigate('Shable', { shableId: id })}>
+						<ListItem key={i} bottomDivider style={{marginBottom: 5}} onPress={() => navigation.navigate('Tabela', { shableId: id })}>
 							<ListItem.Content>
 								<ListItem.Title>{id}</ListItem.Title>
 							</ListItem.Content>
@@ -68,7 +68,7 @@ export default function Menu({route, navigation}: Props): JSX.Element {
 				</Dialog.Actions>
 			</Dialog>
 			<View style={{alignItems: 'center', marginBottom: 20}}>
-				<Button radius={"sm"} onPress={() => navigation.navigate('MakeShable', shableIds)}>
+				<Button radius={"sm"} onPress={() => navigation.navigate('Criar Tabela', shableIds)}>
 					Criar Tabela <Icon type='feather' name='file-plus' color='white'/>
 				</Button>
 			</View>

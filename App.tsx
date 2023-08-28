@@ -31,8 +31,8 @@ export default function App() {
 		<NavigationContainer>
 			<Stack.Navigator>
 				<Stack.Screen name="Menu" component={Menu} initialParams={{newId: undefined}}/>
-				<Stack.Screen name="MakeShable" component={MakeShable}/>
-				<Stack.Screen name="Shable" component={Shable}/>
+				<Stack.Screen name="Criar Tabela" component={MakeShable}/>
+				<Stack.Screen name="Tabela" component={Shable}/>
 			</Stack.Navigator>
 		</NavigationContainer>
 	</ThemeProvider>
