@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  Text,
   View,
 } from 'react-native';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
@@ -15,6 +14,7 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 import { RootStackParamsList, Table as TableType, DataType } from '../types/types';
 import ValuePrompt from '../components/ValuePrompt';
+import { FAB, Text, useTheme } from '@rneui/themed';
 
 type Props = NativeStackScreenProps<RootStackParamsList, 'Shable'>;
 
@@ -23,15 +23,30 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 	const { shableId } = route.params
 	const { getItem, setItem } = useAsyncStorage(shableId)
 	const [ tableData, setTableData ] = useState<TableType | null>(null)
+	const [cellWidth, setCellWidth ] = useState<number[]>([100])
 	//state for altering the table
 	const [showPrompt, setShowPrompt] = useState<boolean>(false)
 	const [[selectedRow, selectedCollum], setSelectCoords ] = useState<[number, number]>([0,0])
 	const [selectedCellData, setSelectedCellData] = useState<string>("")
 	const [selectedCellType, setSelectedCellType] = useState<DataType>('string')
 
+	const { theme } = useTheme();
+
 	useEffect(()=>{
 		readTableData()
 	},[])
+
+	useEffect(()=>{
+		if(tableData){
+			setCellWidth(tableData.headers.map(({ name, datatype }) => {
+				if(datatype == 'string' && name.length > 15){
+					return name.length * 8
+				}
+				return 100
+			}))
+		}
+
+	},[tableData])
 
 	async function readTableData(){
 		try{
@@ -75,8 +90,8 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 			}
 		}
 		return <TouchableOpacity onPress={op}>
-			<View>
-				<Text style={{textAlign: 'center'}}>{cellData}</Text>
+			<View style={{ height: 70, justifyContent: 'center'}}>
+				<Text style={{textAlign: 'center', alignSelf: 'center'}}>{cellData}</Text>
 			</View>
 		</TouchableOpacity>
 	}
@@ -91,18 +106,28 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 			throw new Error("O clone da tabela resultou em undefined")
 		}
 	}
+	const addRow = () => {
+		const newTable = structuredClone(tableData)
+		if(newTable != undefined){
+			const newRow = newTable.headers.map(({ datatype }) => datatype == 'number' ? '0' : '')
+			newTable.table.push(newRow)
+			writeTableData(newTable)
+		}else{
+			throw new Error("O clone da tabela resultou em undefined")
+		}
+	}
 	return (
 		<SafeAreaView style={styles.container}>
-			<Text> Tabela {shableId} </Text>
-				{tableData && 
+			<Text h4> {shableId} </Text>
+			{tableData && <>
 				<ScrollView horizontal={true}>
-					<View>
+					<View style={{marginTop: 20}}>
 						<Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
 							{/*widthArr={state.widthArr} can be used to set header sizes*/}
 							<Row data={tableData.headers.map(v => v.name)}
-								style={styles.header}
-								widthArr={[100, 100]}
-								textStyle={styles.text}
+								style={{ height: 50, backgroundColor: theme.colors.primary }}
+								widthArr={cellWidth}
+								textStyle={{ textAlign: 'center', fontWeight: '300', color: 'black' }}
 							/>
 						</Table>
 						<ScrollView style={styles.dataWrapper}>
@@ -116,8 +141,7 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 									<Cell 
 										key={cellIndex}
 										data={cellElement(cellData, index, cellIndex)} 
-										style={{width: 100}}
-										textStyle={styles.text}
+										style={{width: cellWidth[cellIndex]}}
 									/>
 								))}
 								</TableWrapper>
@@ -126,7 +150,14 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 						</ScrollView>
 					</View>
 				</ScrollView>
-				}
+				<FAB 
+					color={theme.colors.primary}
+					icon={{ name: 'add', color: 'white' }}
+					placement='right'
+					size='large'
+					onPress={addRow}
+				/>
+				</>}
 				{!tableData && <Text>No table Data</Text>}
 			<ValuePrompt
 				value={selectedCellData}
@@ -140,9 +171,8 @@ export default function Shable({ route, navigation }: Props): JSX.Element {
 	)
 }
 const styles = StyleSheet.create({
-	container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
+	container: { flex: 1, paddingLeft: 3, paddingTop: 30, backgroundColor: '#fff' },
 	header: { height: 50, backgroundColor: '#537791' },
-	text: { textAlign: 'center', fontWeight: '100' },
 	dataWrapper: { marginTop: -1 },
-	row: { flexDirection:'row', height: 40, backgroundColor: '#E7E6E1' },
+	row: { flexDirection:'row',backgroundColor: '#E7E6E1' },
   });

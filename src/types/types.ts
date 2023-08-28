@@ -1,7 +1,10 @@
 import { KeyboardTypeOptions } from "react-native";
 
 export type RootStackParamsList = {
-	Menu: undefined;
+	Menu: { 
+		newId: string | undefined
+	};
+	MakeShable: string[];
 	Shable: { 
 		shableId: string
 	};
